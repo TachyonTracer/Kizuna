@@ -1,5 +1,5 @@
-import HeroLayout from "./(layout)/Hero/layout";
-import LoaderLayout from "./(components)/(loader)/layout";
+import { HeroLayout } from "@/components/layout";
+import { LoaderLayout } from "@/components/loader";
 
 export default function Home() {
   return (

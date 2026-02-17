@@ -1,8 +1,14 @@
 "use client";
 
 import { createClient } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
+import Image, { type ImageLoaderProps } from "next/image";
+import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import type { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
+import {
+  broadcastBookmarkMutation,
+  subscribeToBookmarkMutations,
+} from "./bookmarkSync";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -69,7 +75,7 @@ const getAutoBookmarkCategory = (
 };
 
 const normalizeCustomCategory = (value?: string | null) =>
-  value?.trim().replace(/\s+/g, " ");
+  value?.trim().replaceAll(/\s+/g, " ");
 
 const getBookmarkCategory = (bookmark: Bookmark): string => {
   const custom = normalizeCustomCategory(bookmark.category);
@@ -91,7 +97,20 @@ const sortBookmarks = (items: Bookmark[]) =>
     return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
   });
 
-export default function BookmarkList({ userId }: { userId: string }) {
+const toBookmark = (value: Record<string, unknown>): Bookmark | null => {
+  if (
+    typeof value.id !== "string" ||
+    typeof value.title !== "string" ||
+    typeof value.url !== "string" ||
+    typeof value.created_at !== "string"
+  ) {
+    return null;
+  }
+
+  return value as unknown as Bookmark;
+};
+
+export default function BookmarkList({ userId }: Readonly<{ userId: string }>) {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>("All");
@@ -104,15 +123,15 @@ export default function BookmarkList({ userId }: { userId: string }) {
   const [pendingDelete, setPendingDelete] = useState<Bookmark | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
   const MIN_SYNC_ANIMATION_MS = 900;
+  const passThroughLoader = ({ src }: ImageLoaderProps) => src;
 
   const showNotice = (message: string, type: Notice["type"]) => {
     setNotice({ message, type });
     setTimeout(() => setNotice(null), 3200);
   };
 
-  const fetchBookmarks = async () => {
+  const fetchBookmarks = useCallback(async () => {
     const startedAt = Date.now();
     setIsRefreshing(true);
     try {
@@ -125,9 +144,9 @@ export default function BookmarkList({ userId }: { userId: string }) {
 
       if (error) {
         console.error("Error fetching bookmarks:", error);
-      } else {
-        if (data) setBookmarks(sortBookmarks(data as Bookmark[]));
+        return;
       }
+      if (data) setBookmarks(sortBookmarks(data as Bookmark[]));
     } finally {
       const elapsed = Date.now() - startedAt;
       const waitMs = Math.max(0, MIN_SYNC_ANIMATION_MS - elapsed);
@@ -136,7 +155,39 @@ export default function BookmarkList({ userId }: { userId: string }) {
       }
       setIsRefreshing(false);
     }
-  };
+  }, [userId]);
+
+  const handleRealtimeChange = useCallback(
+    (payload: RealtimePostgresChangesPayload<Record<string, unknown>>) => {
+      if (payload.eventType === "INSERT") {
+        const inserted = toBookmark(payload.new);
+        if (!inserted) return;
+
+        setBookmarks((prev) =>
+          sortBookmarks([inserted, ...prev.filter((bookmark) => bookmark.id !== inserted.id)]),
+        );
+        return;
+      }
+
+      if (payload.eventType === "DELETE") {
+        const deletedId = payload.old.id;
+        if (typeof deletedId !== "string") return;
+
+        setBookmarks((prev) => prev.filter((bookmark) => bookmark.id !== deletedId));
+        return;
+      }
+
+      if (payload.eventType === "UPDATE") {
+        const updated = toBookmark(payload.new);
+        if (!updated) return;
+
+        setBookmarks((prev) =>
+          sortBookmarks(prev.map((bookmark) => (bookmark.id === updated.id ? updated : bookmark))),
+        );
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     if (userId) {
@@ -154,32 +205,22 @@ export default function BookmarkList({ userId }: { userId: string }) {
           table: "bookmarks",
           filter: `user_id=eq.${userId}`, // Filter specifically for this user
         },
-        (payload) => {
-          if (payload.eventType === "INSERT") {
-            setBookmarks((prev) => sortBookmarks([payload.new as Bookmark, ...prev]));
-          } else if (payload.eventType === "DELETE") {
-            setBookmarks((prev) => prev.filter((b) => b.id !== payload.old.id));
-          } else if (payload.eventType === "UPDATE") {
-            setBookmarks((prev) =>
-              sortBookmarks(
-                prev.map((b) =>
-                  b.id === payload.new.id ? (payload.new as Bookmark) : b,
-                ),
-              ),
-            )
-          }
-        },
+        (payload) => handleRealtimeChange(payload),
       )
       .subscribe();
 
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, [userId]);
+  }, [fetchBookmarks, handleRealtimeChange, userId]);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    const unsubscribe = subscribeToBookmarkMutations(() => {
+      void fetchBookmarks();
+    });
+
+    return unsubscribe;
+  }, [fetchBookmarks]);
 
   const requestDelete = (bookmark: Bookmark, e: React.MouseEvent) => {
     e.preventDefault();
@@ -207,6 +248,7 @@ export default function BookmarkList({ userId }: { userId: string }) {
     }
 
     showNotice("Memory pruned from archive.", "success");
+    broadcastBookmarkMutation();
   };
 
   const startCategoryEdit = (bookmark: Bookmark, e: React.MouseEvent) => {
@@ -246,6 +288,7 @@ export default function BookmarkList({ userId }: { userId: string }) {
           : bookmark,
       ),
     );
+    broadcastBookmarkMutation();
     cancelCategoryEdit();
   };
 
@@ -268,7 +311,10 @@ export default function BookmarkList({ userId }: { userId: string }) {
       console.error("Error updating sort order:", failed.error);
       showNotice("Could not save card order.", "error");
       fetchBookmarks();
+      return;
     }
+
+    broadcastBookmarkMutation();
   };
 
   const swapBookmarkPositions = (draggedId: string, targetId: string) => {
@@ -506,9 +552,13 @@ export default function BookmarkList({ userId }: { userId: string }) {
                 <div className="flex items-center text-xs font-jp-serif text-stone-500 truncate mt-auto pt-4 pr-28 border-t border-stone-200 border-dashed">
                   <div className="flex items-center min-w-0">
                     {bookmark.icon_url ? (
-                      <img
+                      <Image
                         src={bookmark.icon_url}
                         alt=""
+                        width={16}
+                        height={16}
+                        unoptimized
+                        loader={passThroughLoader}
                         className="w-4 h-4 rounded-sm mr-2 shrink-0 opacity-80"
                       />
                     ) : (
@@ -570,7 +620,7 @@ export default function BookmarkList({ userId }: { userId: string }) {
       ))}
 
       {pendingDelete &&
-        isMounted &&
+        typeof document !== "undefined" &&
         createPortal(
           <div className="fixed inset-0 z-[140] bg-[#1A1614]/75 backdrop-blur-[2px] flex items-center justify-center p-4">
             <div className="w-full max-w-sm bg-[#FFFCF7] border border-stone-300 shadow-xl rounded-sm p-5">

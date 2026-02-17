@@ -1,8 +1,10 @@
 "use client";
 
+import Image, { type ImageLoaderProps } from "next/image";
 import { createClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import type { User } from "@supabase/supabase-js";
 
 // Initialize client explicitly or use a context/hook if preferred
 const supabase = createClient(
@@ -11,10 +13,10 @@ const supabase = createClient(
 );
 
 export default function AuthButton() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const passThroughLoader = ({ src }: ImageLoaderProps) => src;
 
   useEffect(() => {
     // Check active session
@@ -30,10 +32,6 @@ export default function AuthButton() {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    setIsMounted(true);
   }, []);
 
   const handleLogin = async () => {
@@ -72,11 +70,16 @@ export default function AuthButton() {
 
         <div className="flex items-center gap-3 px-4 py-3 bg-[#FFF9F2]/80 border border-stone-200 rounded-sm min-w-[260px]">
           {avatarUrl ? (
-            <img
+            <Image
               src={avatarUrl}
               alt={`${displayName} profile`}
+              width={40}
+              height={40}
+              unoptimized
+              loader={passThroughLoader}
               className="w-10 h-10 rounded-full border border-stone-200 object-cover"
               referrerPolicy="no-referrer"
+              priority
             />
           ) : (
             <div className="w-10 h-10 rounded-full border border-stone-300 bg-stone-100 text-stone-600 flex items-center justify-center font-zen text-sm uppercase">
@@ -101,7 +104,7 @@ export default function AuthButton() {
         </button>
 
         {showSignOutConfirm &&
-          isMounted &&
+          typeof document !== "undefined" &&
           createPortal(
             <div className="fixed inset-0 z-[140] bg-[#1A1614]/75 backdrop-blur-[2px] flex items-center justify-center p-4">
               <div className="w-full max-w-sm bg-[#FFFCF7] border border-stone-300 shadow-xl rounded-sm p-5">

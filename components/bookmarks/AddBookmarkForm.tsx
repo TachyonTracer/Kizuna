@@ -2,6 +2,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { useState } from "react";
+import { broadcastBookmarkMutation } from "./bookmarkSync";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -9,12 +10,13 @@ const supabase = createClient(
 );
 
 type AddBookmarkFormProps = {
-  userId: string;
-  onToast: (message: string, type: "success" | "error") => void;
+  readonly userId: string;
+  readonly onToast: (message: string, type: "success" | "error") => void;
 };
 
-export default function AddBookmarkForm({ userId, onToast }: AddBookmarkFormProps) {
+export default function AddBookmarkForm({ userId, onToast }: Readonly<AddBookmarkFormProps>) {
   const [urlInput, setUrlInput] = useState("");
+  const [titleInput, setTitleInput] = useState("");
   const [categoryInput, setCategoryInput] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -29,7 +31,7 @@ export default function AddBookmarkForm({ userId, onToast }: AddBookmarkFormProp
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!urlInput) return;
 
@@ -41,7 +43,6 @@ export default function AddBookmarkForm({ userId, onToast }: AddBookmarkFormProp
 
     // STRICT VALIDATION
     if (!validateUrl(targetUrl)) {
-      console.warn("Validation failed for URL:", targetUrl);
       onToast(
         "This seed cannot take root. A valid domain is required.",
         "error",
@@ -57,9 +58,10 @@ export default function AddBookmarkForm({ userId, onToast }: AddBookmarkFormProp
       );
       const data = await res.json();
 
-      const title = data.title || targetUrl;
+      const customTitle = titleInput.trim().replaceAll(/\s+/g, " ").slice(0, 160);
+      const title = customTitle || data.title || targetUrl;
       const icon_url = data.icon;
-      const customCategory = categoryInput.trim().replace(/\s+/g, " ").slice(0, 32);
+      const customCategory = categoryInput.trim().replaceAll(/\s+/g, " ").slice(0, 32);
       const basePayload = {
         user_id: userId,
         url: targetUrl,
@@ -87,10 +89,13 @@ export default function AddBookmarkForm({ userId, onToast }: AddBookmarkFormProp
       if (insertError) throw insertError;
 
       setUrlInput("");
+      setTitleInput("");
       setCategoryInput("");
+      broadcastBookmarkMutation();
       onToast("A new thread has been woven into the archive.", "success");
-    } catch (error: any) {
-      onToast(" The connection was severed: " + error.message, "error");
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      onToast("The connection was severed: " + msg, "error");
     } finally {
       setLoading(false);
     }
@@ -119,6 +124,14 @@ export default function AddBookmarkForm({ userId, onToast }: AddBookmarkFormProp
             onChange={(e) => setUrlInput(e.target.value)}
             className="w-full bg-transparent border-b border-stone-300 focus:border-seal-red outline-none text-xs font-jp-serif placeholder:text-stone-300 py-1"
             required
+          />
+          <input
+            type="text"
+            placeholder="Custom Title (optional)"
+            value={titleInput}
+            onChange={(e) => setTitleInput(e.target.value)}
+            className="w-full bg-transparent border-b border-stone-200 focus:border-seal-red outline-none text-[11px] font-jp-serif placeholder:text-stone-300 py-1"
+            maxLength={160}
           />
           <input
             type="text"

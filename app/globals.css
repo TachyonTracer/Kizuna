@@ -3,6 +3,15 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Kizuna theme tokens */
+  --washi-cream: #f9f6f0;
+  --sakura-pink: #f8c3cd;
+  --sakura-dark: #d68e9d;
+  --ink-black: #2b2825;
+  --indigo-dye: #2e3a59;
+  --seal-red: #b33030;
+  --matcha-green: #869575;
 }
 
 @theme inline {
@@ -26,25 +35,37 @@ body {
 }
 
 /* ===== Kizuna Hero styles (from demo.html) ===== */
-:root {
-  --washi-cream: #f9f6f0;
-  --sakura-pink: #f8c3cd;
-  --sakura-dark: #d68e9d;
-  --ink-black: #2b2825;
-  --indigo-dye: #2e3a59;
-  --seal-red: #b33030;
-  --matcha-green: #869575;
-}
 
 /* font helpers (used alongside Tailwind utility classes in the Hero) */
 .font-jp-serif {
-  font-family: "Noto Serif JP", serif;
+  font-family: var(--font-jp-serif), serif;
 }
 .font-zen {
-  font-family: "Zen Antique", serif;
+  font-family: var(--font-zen), serif;
 }
 .font-cinzel {
-  font-family: "Cinzel", serif;
+  font-family: var(--font-cinzel), serif;
+}
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined", sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
 }
 
 /* color helpers */
@@ -83,7 +104,7 @@ body {
 
 /* ===== Hero typography refinement ===== */
 .hero-subtitle {
-  font-family: "Zen Antique", serif;
+  font-family: var(--font-zen), serif;
   font-size: clamp(10px, 1.2vw, 12px);
   font-weight: 700;
   color: var(--seal-red);
@@ -92,7 +113,7 @@ body {
 }
 
 .hero-title {
-  font-family: "Zen Antique", serif;
+  font-family: var(--font-zen), serif;
   font-size: clamp(48px, 6vw, 60px); /* match loader / responsive */
   font-weight: 400; /* keep visual parity with page H1 */
   color: var(--ink-black);
@@ -104,7 +125,7 @@ body {
 }
 
 .hero-tagline {
-  font-family: "Noto Serif JP", serif;
+  font-family: var(--font-jp-serif), serif;
   font-size: 1.125rem; /* match loader tagline */
   font-weight: 300;
   color: rgba(46, 58, 89, 0.8); /* indigo-dye/80 */

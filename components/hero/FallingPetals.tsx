@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Image from "next/image";
 
 const PETAL_IMAGE = "/petals/petal.svg";
 
@@ -13,30 +13,26 @@ interface Petal {
 }
 
 export default function FallingPetals() {
-  const [petals, setPetals] = useState<Petal[]>([]);
-
-  useEffect(() => {
-    // Generate petals only on client-side to avoid hydration mismatch
-    const newPetals = Array.from({ length: 50 }).map((_, i) => ({
-      id: i,
-      left: `${Math.random() * 100}%`,
-      animationDuration: `${Math.random() * 5 + 8}s`, // 8-13s (slower fall)
-      animationDelay: `-${Math.random() * 13}s`, // Start mid-animation
-      width: `${Math.random() * 15 + 10}px`, // 10-25px (varied sizes)
-    }));
-    setPetals(newPetals);
-  }, []);
+  // Deterministic petals avoid hydration mismatch and lint issues.
+  const petals: Petal[] = Array.from({ length: 50 }).map((_, i) => ({
+    id: i,
+    left: `${(i * 7.3) % 100}%`,
+    animationDuration: `${8 + (i % 6)}s`,
+    animationDelay: `-${(i * 0.8) % 13}s`,
+    width: `${10 + (i % 16)}px`,
+  }));
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
       {petals.map((petal) => (
-        <img
+        <Image
           key={petal.id}
           src={PETAL_IMAGE}
           alt=""
           className="absolute animate-fall"
-          loading="eager"
-          decoding="async"
+          width={24}
+          height={24}
+          priority
           style={{
             left: petal.left,
             width: petal.width,

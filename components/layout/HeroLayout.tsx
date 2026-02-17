@@ -1,8 +1,9 @@
-import FallingPetals from "@/app/(components)/FallingPetals";
-import HeroBackground from "@/app/(components)/HeroBackground";
-import HeroSideDecorations from "@/app/(components)/HeroSideDecorations";
-import AuthButton from "@/app/(components)/Bookmarks/AuthButton";
-import BookmarkManager from "@/app/(components)/Bookmarks/BookmarkManager";
+import {
+  FallingPetals,
+  HeroBackground,
+  HeroSideDecorations,
+} from "@/components/hero";
+import { AuthButton, BookmarkManager } from "@/components/bookmarks";
 
 export default function HeroLayout({
   children,
@@ -11,19 +12,6 @@ export default function HeroLayout({
 }) {
   return (
     <>
-      {/* Google fonts + Material Symbols for icons (kept simple for the demo) */}
-      <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+JP:wght@300;400;600;900&family=Zen+Antique&display=swap"
-        rel="stylesheet"
-      />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet"
-      />
-
-      {/* preload petal SVG to avoid visible delay for falling petals */}
-      <link rel="preload" href="/petals/petal.svg" as="image" />
-
       <div className="font-jp-serif text-ink-black min-h-screen kizuna-hero-bg">
         <div className="w-full washi-card flex shadow-2xl overflow-visible relative border border-stone-200">
           <aside className="w-16 md:w-20 h-screen border-r border-stone-200 flex flex-col items-center py-8 gap-10 bg-[#FAF9F6]/80 z-30 shrink-0 relative">
@@ -31,27 +19,27 @@ export default function HeroLayout({
               絆・アーカイブ
             </div>
             <nav className="flex flex-col gap-8 items-center mt-4">
-              <a
+              <button
+                type="button"
+                aria-label="View bookmarks"
                 className="material-symbols-outlined text-indigo-dye hover:text-seal-red transition-colors text-2xl"
-                href="#"
-                title="View Bookmarks"
               >
                 bookmarks
-              </a>
-              <a
+              </button>
+              <button
+                type="button"
+                aria-label="Add new link"
                 className="material-symbols-outlined text-indigo-dye hover:text-seal-red transition-colors text-2xl"
-                href="#"
-                title="Add New Link"
               >
                 add_circle
-              </a>
-              <a
+              </button>
+              <button
+                type="button"
+                aria-label="User settings"
                 className="material-symbols-outlined text-indigo-dye hover:text-seal-red transition-colors text-2xl"
-                href="#"
-                title="User Settings"
               >
                 manage_accounts
-              </a>
+              </button>
             </nav>
             <div className="mt-auto flex flex-col items-center gap-4">
               <div className="w-px h-12 bg-stone-300"></div>

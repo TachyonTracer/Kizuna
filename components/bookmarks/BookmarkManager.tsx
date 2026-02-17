@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import BookmarkList from "./BookmarkList";
 import AddBookmarkForm from "./AddBookmarkForm";
+import type { User } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -38,7 +39,7 @@ const demoBookmarks = [
 ];
 
 export default function BookmarkManager() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [toast, setToast] = useState<{
     message: string;
     type: "success" | "error";
