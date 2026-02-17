@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kizuna Sakura Archive Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&amp;family=Noto+Serif+JP:wght@300;400;600;900&amp;family=Zen+Antique&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "washi-cream": "#F9F6F0",
+                        "sakura-pink": "#F8C3CD",
+                        "sakura-dark": "#D68E9D",
+                        "ink-black": "#2B2825",
+                        "indigo-dye": "#2E3A59",
+                        "seal-red": "#B33030",
+                        "matcha-green": "#869575",
+                    },
+                    fontFamily: {
+                        "jp-serif": ["Noto Serif JP", "serif"],
+                        "zen": ["Zen Antique", "serif"],
+                        "cinzel": ["Cinzel", "serif"],
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --washi-cream: #F9F6F0;
+            --sakura-pink: #F8C3CD;
+            --sakura-dark: #D68E9D;
+            --seal-red: #B33030;
+        }
+        body {
+            background-color: #EDE8D6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(248, 195, 205, 0.4) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(248, 195, 205, 0.3) 0%, transparent 20%),
+                url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23paper)' opacity='0.15'/%3E%3C/svg%3E");
+        }
+        .washi-card {
+            background-color: var(--washi-cream);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08), inset 0 0 60px rgba(255,240,245,0.2);
+            position: relative;
+        }
+        .washi-card::before {
+             content: "";
+             position: absolute;
+             top: 0; left: 0; right: 0; bottom: 0;
+             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20 Q 30 10 40 20 T 60 20 T 80 20' stroke='%23D68E9D' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3C/svg%3E");
+             opacity: 0.3;
+             pointer-events: none;
+             z-index: 0;
+        }.tategaki {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 0.2em;
+        }.hanko-seal {
+            border: 2px solid var(--seal-red);
+            color: var(--seal-red);
+            border-radius: 8px;position: relative;
+            background-color: rgba(255,255,255,0.8);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 0 0 2px transparent;
+        }
+        .hanko-seal::after {
+            content: '';
+            position: absolute;
+            top: 2px; left: 2px; right: 2px; bottom: 2px;
+            border: 1px solid var(--seal-red);
+            opacity: 0.3;
+            border-radius: 4px;
+        }
+        .hanko-seal:hover {
+            background-color: #FFF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(179, 48, 48, 0.2);
+        }.tanzaku-card {
+            background-color: #FFFCF7;
+            border: 1px solid #E6DCCD;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.03);
+            border-left: 4px solid var(--sakura-pink);
+        }
+        .tanzaku-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 4px 4px 15px rgba(0,0,0,0.06);
+            border-left-color: var(--seal-red);
+        }.sakura-btn {
+            color: var(--sakura-dark);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            padding: 4px;
+        }
+        .tanzaku-card:hover .sakura-btn {
+            opacity: 1;
+        }
+        .sakura-btn:hover {
+            color: var(--seal-red);
+            background-color: rgba(248, 195, 205, 0.2);
+            transform: rotate(15deg);
+        }
+        .rope-border {
+             border-bottom: 2px dashed #D6CDBB;
+        }</style>
+</head>
+<body class="font-jp-serif text-ink-black min-h-screen p-2 md:p-6 flex justify-center items-center">
+<div class="max-w-7xl w-full washi-card min-h-[92vh] flex shadow-2xl overflow-hidden rounded-sm relative border border-stone-200">
+<aside class="w-16 md:w-20 border-r border-stone-200 flex flex-col items-center py-8 gap-10 bg-[#FAF9F6]/80 z-30 shrink-0 relative">
+<div class="tategaki font-zen text-xs tracking-[0.3em] opacity-60 text-seal-red font-bold">絆・アーカイブ</div>
+<nav class="flex flex-col gap-8 items-center mt-4">
+<a class="material-symbols-outlined text-indigo-dye hover:text-seal-red transition-colors text-2xl" href="#" title="View Bookmarks">bookmarks</a>
+<a class="material-symbols-outlined text-indigo-dye hover:text-seal-red transition-colors text-2xl" href="#" title="Add New Link">add_circle</a>
+<a class="material-symbols-outlined text-indigo-dye hover:text-seal-red transition-colors text-2xl" href="#" title="User Settings">manage_accounts</a>
+</nav>
+<div class="mt-auto flex flex-col items-center gap-4">
+<div class="w-px h-12 bg-stone-300"></div>
+<span class="font-zen text-xl text-sakura-dark">桜</span>
+</div>
+</aside>
+<div class="flex-1 flex flex-col relative overflow-hidden bg-transparent z-10">
+<section class="p-8 md:p-12 rope-border relative bg-white/40 z-10 backdrop-blur-sm">
+<div class="absolute top-0 right-0 p-4 opacity-20 pointer-events-none">
+<svg fill="none" height="120" stroke="#D68E9D" stroke-width="0.5" viewBox="0 0 100 100" width="120">
+<path d="M50 50 Q 70 20 90 50 T 50 90 T 10 50 T 50 10"></path>
+<circle cx="50" cy="50" r="30" stroke-dasharray="2 4"></circle>
+</svg>
+</div>
+<div class="max-w-2xl mx-auto text-center space-y-8">
+<div class="flex flex-col items-center">
+<span class="font-zen text-sm tracking-[0.4em] text-seal-red mb-3 block uppercase">Connection • Bond</span>
+<h1 class="font-zen text-5xl md:text-6xl text-ink-black mb-2">
+                        Kizuna
+                    </h1>
+<span class="text-indigo-dye/80 font-jp-serif font-light text-xl tracking-widest">
+                        Digital Garden of Memories
+                    </span>
+</div>
+<div class="py-8 px-8 border-y border-stone-200 bg-[#FDFBF7]/60 backdrop-blur-md rounded-sm max-w-lg mx-auto">
+<p class="font-jp-serif text-base text-ink-black/70 mb-8 leading-loose">
+                        To preserve the threads of knowledge, verify your seal. Authenticate your ledger to access the archive.
+                    </p>
+<div class="flex flex-col items-center gap-4">
+<a class="hanko-seal group px-8 py-3 flex items-center gap-3 cursor-pointer" href="#">
+<div class="bg-white p-1 rounded-full shadow-sm border border-stone-100">
+<svg class="w-5 h-5" viewBox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.67l-3.57-2.77c-1.01.69-2.28 1.1-3.71 1.1-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.13c-.22-.66-.35-1.36-.35-2.13s.13-1.47.35-2.13V7.04H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.96l3.66-2.83z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.04l3.66 2.83c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+</div>
+<span class="font-zen font-bold text-base tracking-widest text-seal-red">GOOGLE OAUTH</span>
+</a>
+<span class="text-[10px] uppercase font-jp-serif text-stone-400 tracking-widest mt-1">Identity Verification Protocol</span>
+</div>
+</div>
+</div>
+</section>
+<div class="flex-1 p-6 md:p-10 bg-[#FAF8F2]/50">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-min">
+<div class="tanzaku-card p-5 flex flex-col justify-between min-h-[160px] group">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-2 opacity-70">
+<span class="material-symbols-outlined text-sm text-stone-500">schedule</span>
+<span class="font-jp-serif text-[10px] text-stone-500 tracking-wider">OCT 14 • 10:23 AM</span>
+</div>
+<button class="sakura-btn material-symbols-outlined text-xl" title="Remove Entry">local_florist</button>
+</div>
+<h3 class="font-zen text-lg mb-2 text-ink-black leading-snug group-hover:text-seal-red transition-colors">
+                        The Library of Babel Analysis
+                    </h3>
+<div class="flex items-center text-xs font-jp-serif text-stone-500 truncate mt-auto pt-4 border-t border-stone-200 border-dashed">
+<div class="w-4 h-4 bg-stone-300 rounded-sm mr-2 shrink-0 opacity-50"></div>
+<span class="italic tracking-wide truncate">borges.library.edu/archive</span>
+</div>
+</div>
+<div class="tanzaku-card p-5 flex flex-col justify-between min-h-[160px] group">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-2 opacity-70">
+<span class="material-symbols-outlined text-sm text-stone-500">schedule</span>
+<span class="font-jp-serif text-[10px] text-stone-500 tracking-wider">OCT 16 • 02:45 PM</span>
+</div>
+<button class="sakura-btn material-symbols-outlined text-xl" title="Remove Entry">local_florist</button>
+</div>
+<h3 class="font-zen text-lg mb-2 text-ink-black leading-snug group-hover:text-seal-red transition-colors">
+                        Digital Manuscript Conservation
+                    </h3>
+<div class="flex items-center text-xs font-jp-serif text-stone-500 truncate mt-auto pt-4 border-t border-stone-200 border-dashed">
+<div class="w-4 h-4 bg-stone-300 rounded-sm mr-2 shrink-0 opacity-50"></div>
+<span class="italic tracking-wide truncate">manuscripts.io/tech-spec</span>
+</div>
+</div>
+<div class="tanzaku-card p-5 flex flex-col justify-between min-h-[160px] group">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-2 opacity-70">
+<span class="material-symbols-outlined text-sm text-stone-500">schedule</span>
+<span class="font-jp-serif text-[10px] text-stone-500 tracking-wider">OCT 17 • 09:12 AM</span>
+</div>
+<button class="sakura-btn material-symbols-outlined text-xl" title="Remove Entry">local_florist</button>
+</div>
+<h3 class="font-zen text-lg mb-2 text-ink-black leading-snug group-hover:text-seal-red transition-colors">
+                        Principles of Information Flow
+                    </h3>
+<div class="flex items-center text-xs font-jp-serif text-stone-500 truncate mt-auto pt-4 border-t border-stone-200 border-dashed">
+<div class="w-4 h-4 bg-stone-300 rounded-sm mr-2 shrink-0 opacity-50"></div>
+<span class="italic tracking-wide truncate">academic-ledger.net/flow</span>
+</div>
+</div>
+<div class="tanzaku-card p-5 flex flex-col justify-between min-h-[160px] group">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-2 opacity-70">
+<span class="material-symbols-outlined text-sm text-stone-500">schedule</span>
+<span class="font-jp-serif text-[10px] text-stone-500 tracking-wider">OCT 18 • 04:55 PM</span>
+</div>
+<button class="sakura-btn material-symbols-outlined text-xl" title="Remove Entry">local_florist</button>
+</div>
+<h3 class="font-zen text-lg mb-2 text-ink-black leading-snug group-hover:text-seal-red transition-colors">
+                        Semantic Web Ontologies
+                    </h3>
+<div class="flex items-center text-xs font-jp-serif text-stone-500 truncate mt-auto pt-4 border-t border-stone-200 border-dashed">
+<div class="w-4 h-4 bg-stone-300 rounded-sm mr-2 shrink-0 opacity-50"></div>
+<span class="italic tracking-wide truncate">w3.org/standards/semantic</span>
+</div>
+</div>
+<div class="border border-stone-300 border-dashed p-4 min-h-[160px] flex items-center justify-center opacity-30 rounded-sm">
+<span class="material-symbols-outlined text-3xl text-stone-400">add</span>
+</div>
+</div>
+</div>
+<footer class="p-6 border-t border-double border-stone-300 bg-[#FAF9F6] flex flex-col md:flex-row justify-between items-center text-[10px] tracking-[0.2em] uppercase text-stone-500 font-jp-serif">
+<div class="flex items-center gap-4">
+<span>© Kizuna Archive</span>
+<span class="opacity-30">|</span>
+<span>Real-Time Sync</span>
+</div>
+<div class="mt-2 md:mt-0 font-bold text-indigo-dye/60">Version 1.0 • Sakura Season</div>
+</footer>
+</div>
+<div class="fixed top-0 right-12 md:right-24 w-10 h-32 bg-seal-red shadow-lg z-50 pointer-events-none flex flex-col items-center pt-4" style="clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);">
+<div class="w-px h-full bg-black/10 absolute left-2"></div>
+<div class="w-px h-full bg-black/10 absolute right-2"></div>
+<span class="text-white/90 text-xs font-zen tategaki">保存</span>
+</div>
+</div>
+
+</body></html>

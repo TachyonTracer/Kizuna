@@ -24,3 +24,212 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ===== Kizuna Hero styles (from demo.html) ===== */
+:root {
+  --washi-cream: #f9f6f0;
+  --sakura-pink: #f8c3cd;
+  --sakura-dark: #d68e9d;
+  --ink-black: #2b2825;
+  --indigo-dye: #2e3a59;
+  --seal-red: #b33030;
+  --matcha-green: #869575;
+}
+
+/* font helpers (used alongside Tailwind utility classes in the Hero) */
+.font-jp-serif {
+  font-family: "Noto Serif JP", serif;
+}
+.font-zen {
+  font-family: "Zen Antique", serif;
+}
+.font-cinzel {
+  font-family: "Cinzel", serif;
+}
+
+/* color helpers */
+.text-ink-black {
+  color: var(--ink-black);
+}
+.text-indigo-dye {
+  color: var(--indigo-dye);
+}
+.text-sakura-dark {
+  color: var(--sakura-dark);
+}
+.text-seal-red {
+  color: var(--seal-red);
+}
+.bg-seal-red {
+  background-color: var(--seal-red);
+}
+
+/* decorative background for the Hero container */
+.kizuna-hero-bg {
+  background-color: #ede8d6;
+  background-image:
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(248, 195, 205, 0.4) 0%,
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(248, 195, 205, 0.3) 0%,
+      transparent 20%
+    ),
+    url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23paper)' opacity='0.15'/%3E%3C/svg%3E");
+}
+
+/* ===== Hero typography refinement ===== */
+.hero-subtitle {
+  font-family: "Zen Antique", serif;
+  font-size: clamp(10px, 1.2vw, 12px);
+  font-weight: 700;
+  color: var(--seal-red);
+  letter-spacing: 0.4em; /* matches original visual rhythm */
+  opacity: 0.95;
+}
+
+.hero-title {
+  font-family: "Zen Antique", serif;
+  font-size: clamp(48px, 6vw, 60px); /* match loader / responsive */
+  font-weight: 400; /* keep visual parity with page H1 */
+  color: var(--ink-black);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.hero-tagline {
+  font-family: "Noto Serif JP", serif;
+  font-size: 1.125rem; /* match loader tagline */
+  font-weight: 300;
+  color: rgba(46, 58, 89, 0.8); /* indigo-dye/80 */
+  letter-spacing: 0.12em;
+}
+
+/* Respect reduced-motion for falling petals and other animations */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fall {
+    animation: none !important;
+  }
+}
+
+/* component styles copied/adapted from demo.html */
+.washi-card {
+  background-color: var(--washi-cream);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    inset 0 0 60px rgba(255, 240, 245, 0.2);
+  position: relative;
+}
+.washi-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20 Q 30 10 40 20 T 60 20 T 80 20' stroke='%23D68E9D' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3C/svg%3E");
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tategaki {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 0.2em;
+}
+
+.hanko-seal {
+  border: 2px solid var(--seal-red);
+  color: var(--seal-red);
+  border-radius: 8px;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 0 0 2px transparent;
+}
+.hanko-seal::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  border: 1px solid var(--seal-red);
+  opacity: 0.3;
+  border-radius: 4px;
+}
+.hanko-seal:hover {
+  background-color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(179, 48, 48, 0.2);
+}
+
+.tanzaku-card {
+  background-color: #fffcf7;
+  border: 1px solid #e6dccd;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.03);
+  border-left: 4px solid var(--sakura-pink);
+}
+.tanzaku-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.06);
+  border-left-color: var(--seal-red);
+}
+
+.sakura-btn {
+  color: var(--sakura-dark);
+  opacity: 0.6;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  padding: 4px;
+}
+.tanzaku-card:hover .sakura-btn {
+  opacity: 1;
+}
+.sakura-btn:hover {
+  color: var(--seal-red);
+  background-color: rgba(248, 195, 205, 0.2);
+  transform: rotate(15deg);
+}
+
+.rope-border {
+  border-bottom: 2px dashed #d6cdbb;
+}
+
+@keyframes fall {
+  0% {
+    top: -10%;
+    transform: translateX(0px) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    top: 110%;
+    transform: translateX(20px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-fall {
+  animation-name: fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-delay: 0s;
+  animation-fill-mode: both; /* ensures elements are visible when using negative delays */
+  will-change: transform, top, opacity;
+  backface-visibility: hidden;
+}
