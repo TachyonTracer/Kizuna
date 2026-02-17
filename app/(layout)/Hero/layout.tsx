@@ -95,11 +95,6 @@ export default function HeroLayout({
                 </div>
 
                 <div className="py-8 px-8 border-y border-stone-200 bg-[#FDFBF7]/80 backdrop-blur-xl rounded-sm max-w-lg mx-auto shadow-sm hover:shadow-md transition-shadow duration-500">
-                  <p className="font-jp-serif text-base text-ink-black/70 mb-8 leading-loose">
-                    To preserve the threads of knowledge, verify your seal.
-                    Authenticate your ledger to access the archive.
-                  </p>
-
                   <div className="flex flex-col items-center gap-4">
                     <div className="flex flex-col items-center gap-4">
                       <AuthButton />
